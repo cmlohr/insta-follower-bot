@@ -54,21 +54,21 @@ follower_link = driver.find_element_by_xpath('//*[@id="react-root"]/section/main
 follower_link.click()
 time.sleep(randint(1, 3))
 
-follower_pop_up = driver.find_element_by_xpath('//div[@class="isgrP"]')
+follower_popup = driver.find_element_by_xpath('/html/body/div[5]/div/div/div[2]')
 scroll = 0
 while scroll < 10:  # determines how many scrolls
-    try:
-        follow_btn = driver.find_elements_by_xpath("//button[contains(.,'Follow')]")
-        for items in follow_btn:
-            driver.execute_script("arguments[0].click();", items)
-            time.sleep(randint(1, 3))
-        scroll += 1
-    except ElementClickInterceptedException:
-        modal = driver.find_element_by_xpath('/html/body/div[5]/div/div/div[2]')
-        cancel_button = driver.find_element_by_xpath('/html/body/div[6]/div/div/div/div[3]/button[2]')
-    except StaleElementReferenceException:
-        pass
-    finally:
-        time.sleep(randint(1, 3))
-        driver.execute_script('arguments[0].scrollTop = arguments[0].scrollTop + arguments[0].offsetHeight;',
-                              follower_pop_up)
+    driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", follower_popup)
+    time.sleep(randint(2, 3))
+    follow_btns = driver.find_elements_by_css_selector("li button")
+    for button in follow_btns:
+        try:
+            button.click()
+            time.sleep(randint(1, 2))
+        except ElementClickInterceptedException:
+            cancel_button = driver.find_element_by_xpath('/html/body/div[6]/div/div/div/div[3]/button[2]')
+            cancel_button.click()
+            time.sleep(randint(1, 2))
+        except StaleElementReferenceException:
+            pass
+
+
